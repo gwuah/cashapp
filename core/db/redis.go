@@ -1,14 +1,14 @@
 package db
 
 import (
-	"cashapp/infra"
+	"cashapp/core"
 	"net/url"
 
 	"github.com/go-redis/redis/v8"
 )
 
-func NewRedis(config *infra.Config) *redis.Client {
-	if infra.GetEnvironment() == infra.Staging {
+func NewRedis(config *core.Config) *redis.Client {
+	if core.GetEnvironment() == core.Staging {
 		parsedURL, _ := url.Parse(config.REDIS_URL)
 		password, _ := parsedURL.User.Password()
 		return redis.NewClient(&redis.Options{

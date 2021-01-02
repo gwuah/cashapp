@@ -1,7 +1,7 @@
 package db
 
 import (
-	"cashapp/infra"
+	"cashapp/core"
 	"fmt"
 
 	"gorm.io/driver/postgres"
@@ -13,7 +13,7 @@ func RunMigrations(db *gorm.DB, models ...interface{}) error {
 	return err
 }
 
-func GeneratePostgresURI(config *infra.Config) string {
+func GeneratePostgresURI(config *core.Config) string {
 	var (
 		dbUrl    = config.DATABASE_URL
 		host     = config.PG_HOST
@@ -23,13 +23,13 @@ func GeneratePostgresURI(config *infra.Config) string {
 		password = config.PG_PASS
 		sslmode  = config.PG_SSLMODE
 	)
-	if config.ENVIRONMENT == infra.Development {
+	if config.ENVIRONMENT == core.Development {
 		dbUrl = fmt.Sprintf("postgresql://%s:%s@%s:%s/%s?sslmode=%s", user, password, host, port, dbname, sslmode)
 	}
 	return dbUrl
 }
 
-func NewPostgres(config *infra.Config) (*gorm.DB, error) {
+func NewPostgres(config *core.Config) (*gorm.DB, error) {
 	var (
 		db  *gorm.DB
 		err error

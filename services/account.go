@@ -1,7 +1,7 @@
 package services
 
 import (
-	"cashapp/infra"
+	"cashapp/core"
 	"cashapp/repo"
 	"errors"
 	"log"
@@ -12,24 +12,24 @@ import (
 
 type accountLayer struct {
 	repo   repo.Repo
-	config *infra.Config
+	config *core.Config
 }
 
-func newAccountLayer(r repo.Repo, c *infra.Config) *accountLayer {
+func newAccountLayer(r repo.Repo, c *core.Config) *accountLayer {
 	return &accountLayer{
 		repo:   r,
 		config: c,
 	}
 }
 
-func (c *accountLayer) CreateAccount(req infra.CreateAccountRequest) infra.Response {
+func (c *accountLayer) CreateAccount(req core.CreateAccountRequest) core.Response {
 	account, err := c.repo.Accounts.FindByTag(req.Tag)
 
 	if err == nil {
-		return infra.Response{
+		return core.Response{
 			Error: true,
 			Code:  http.StatusBadRequest,
-			Meta: infra.Meta{
+			Meta: core.Meta{
 				Data:    nil,
 				Message: "cash tag has already been taken.",
 			},
@@ -38,10 +38,10 @@ func (c *accountLayer) CreateAccount(req infra.CreateAccountRequest) infra.Respo
 
 	if !errors.Is(err, gorm.ErrRecordNotFound) {
 		log.Println("findByTag failed. err", err)
-		return infra.Response{
+		return core.Response{
 			Error: true,
 			Code:  http.StatusInternalServerError,
-			Meta: infra.Meta{
+			Meta: core.Meta{
 				Data:    nil,
 				Message: "request failed",
 			},
@@ -51,20 +51,20 @@ func (c *accountLayer) CreateAccount(req infra.CreateAccountRequest) infra.Respo
 	err = c.repo.Accounts.Create(account)
 	if err != nil {
 		log.Println("create account failed. err", err)
-		return infra.Response{
+		return core.Response{
 			Error: true,
 			Code:  http.StatusInternalServerError,
-			Meta: infra.Meta{
+			Meta: core.Meta{
 				Data:    nil,
 				Message: "request failed",
 			},
 		}
 	}
 
-	return infra.Response{
+	return core.Response{
 		Error: false,
 		Code:  http.StatusOK,
-		Meta: infra.Meta{
+		Meta: core.Meta{
 			Data: map[string]interface{}{
 				"account": account,
 			},

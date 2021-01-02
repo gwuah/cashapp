@@ -1,7 +1,7 @@
 package repo
 
 import (
-	"cashapp/infra/models"
+	"cashapp/core/models"
 
 	"gorm.io/gorm"
 )

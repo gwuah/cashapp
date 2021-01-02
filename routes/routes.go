@@ -1,7 +1,7 @@
 package routes
 
 import (
-	"cashapp/infra"
+	"cashapp/core"
 	"cashapp/services"
 
 	"github.com/gin-gonic/gin"
@@ -9,11 +9,11 @@ import (
 
 type router struct {
 	engine   *gin.Engine
-	config   *infra.Config
+	config   *core.Config
 	services services.Services
 }
 
-func NewRouter(engine *gin.Engine, config *infra.Config, services services.Services) *router {
+func NewRouter(engine *gin.Engine, config *core.Config, services services.Services) *router {
 	return &router{
 		engine:   engine,
 		config:   config,

@@ -1,19 +1,19 @@
 package main
 
 import (
-	"cashapp/infra"
+	"cashapp/core"
 	"cashapp/repo"
 	"cashapp/routes"
 	"cashapp/services"
 
-	"cashapp/infra/db"
-	"cashapp/infra/models"
+	"cashapp/core/db"
+	"cashapp/core/models"
 
 	"log"
 )
 
 func main() {
-	config := infra.NewConfig()
+	config := core.NewConfig()
 
 	pg, err := db.NewPostgres(config)
 	if err != nil {
@@ -31,7 +31,7 @@ func main() {
 
 	cache := db.NewRedis(config)
 	repository := repo.NewRepo(pg)
-	server := infra.NewHTTPServer(config)
+	server := core.NewHTTPServer(config)
 	service := services.NewService(repository, cache, config)
 	router := routes.NewRouter(server.Engine, config, service)
 	router.RegisterRoutes()

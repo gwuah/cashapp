@@ -1,4 +1,4 @@
-package infra
+package core
 
 type Pagination struct {
 	CurrentPage  int   `json:"current_page,omitempty"`
