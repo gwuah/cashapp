@@ -41,5 +41,7 @@ func NewPostgres(config *core.Config) (*gorm.DB, error) {
 		return nil, err
 	}
 
+	db = db.Debug()
+
 	return db, nil
 }
