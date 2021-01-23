@@ -8,15 +8,20 @@ import (
 	"gorm.io/gorm"
 )
 
-type Direction string
+type Type string
 type Status string
+type Direction string
 
 var (
-	Debit  Direction = "debit"
-	Credit Direction = "credit"
+	Debit  Type = "debit"
+	Credit Type = "credit"
 
 	Failed  Status = "failed"
+	Pending Status = "pending"
 	Success Status = "success"
+
+	Incoming Direction = "incoming"
+	Outgoing Direction = "outgoing"
 )
 
 type Model struct {
@@ -34,23 +39,32 @@ type Account struct {
 
 type Wallet struct {
 	Model
-	AccountID    int           `json:"account_id"`
-	Account      *Account      `json:"account,omitempty"`
-	IsPrimary    bool          `json:"is_primary,omitempty"`
-	Transactions []Transaction `json:"transactions"`
+	AccountID int      `json:"account_id"`
+	Account   *Account `json:"account,omitempty"`
+	IsPrimary bool     `json:"is_primary,omitempty"`
 }
 
 type Transaction struct {
 	Model
-	Amount      int       `json:"amount"`
-	AccountID   int       `json:"account_id"`
-	Account     *Account  `json:"account,omitempty"`
-	WalletID    int       `json:"wallet_id"`
-	Wallet      *Wallet   `json:"wallet,omitempty"`
-	Description string    `json:"description"`
-	Direction   Direction `json:"direction"`
-	Status      Status    `json:"status"`
-	Date        time.Time `json:"transaction_date"`
+	Direction         Direction          `json:"direction"`
+	Status            Status             `json:"status"`
+	Description       string             `json:"description"`
+	Ref               string             `json:"ref"`
+	From              int                `json:"from"`
+	To                int                `json:"to"`
+	WalletID          int                `json:"wallet_id"`
+	AccountID         int                `json:"account_id"`
+	Account           *Account           `json:"account,omitempty"`
+	TransactionEvents []TransactionEvent `json:"transaction_lines"`
+	Amount            int64              `json:"amount"`
+}
+
+type TransactionEvent struct {
+	Model
+	TransactionID string `json:"transaction_id"`
+	WalletID      string `json:"wallet_id"`
+	Type          Type   `json:"type"`
+	Amount        int64  `json:"amount"`
 }
 
 func RunSeeds(db *gorm.DB) {

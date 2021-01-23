@@ -2,12 +2,12 @@ package main
 
 import (
 	"cashapp/core"
-	"cashapp/repo"
+	"cashapp/repository"
 	"cashapp/routes"
 	"cashapp/services"
 
 	"cashapp/core/db"
-	"cashapp/core/models"
+	"cashapp/models"
 
 	"log"
 )
@@ -30,10 +30,12 @@ func main() {
 	}
 
 	cache := db.NewRedis(config)
-	repository := repo.NewRepo(pg)
+	repo := repository.NewRepository(pg)
+	service := services.NewService(repo, cache, config)
+
 	server := core.NewHTTPServer(config)
-	service := services.NewService(repository, cache, config)
 	router := routes.NewRouter(server.Engine, config, service)
+
 	router.RegisterRoutes()
 	server.Start()
 

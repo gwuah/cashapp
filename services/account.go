@@ -2,7 +2,7 @@ package services
 
 import (
 	"cashapp/core"
-	"cashapp/repo"
+	"cashapp/repository"
 	"errors"
 	"log"
 	"net/http"
@@ -11,19 +11,19 @@ import (
 )
 
 type accountLayer struct {
-	repo   repo.Repo
-	config *core.Config
+	repository repository.Repo
+	config     *core.Config
 }
 
-func newAccountLayer(r repo.Repo, c *core.Config) *accountLayer {
+func newAccountLayer(r repository.Repo, c *core.Config) *accountLayer {
 	return &accountLayer{
-		repo:   r,
-		config: c,
+		repository: r,
+		config:     c,
 	}
 }
 
 func (c *accountLayer) CreateAccount(req core.CreateAccountRequest) core.Response {
-	account, err := c.repo.Accounts.FindByTag(req.Tag)
+	account, err := c.repository.Accounts.FindByTag(req.Tag)
 
 	if err == nil {
 		return core.Response{
@@ -48,8 +48,7 @@ func (c *accountLayer) CreateAccount(req core.CreateAccountRequest) core.Respons
 		}
 	}
 
-	err = c.repo.Accounts.Create(account)
-	if err != nil {
+	if err := c.repository.Accounts.Create(account); err != nil {
 		log.Println("create account failed. err", err)
 		return core.Response{
 			Error: true,

@@ -22,3 +22,10 @@ type Response struct {
 type CreateAccountRequest struct {
 	Tag string `json:"tag"`
 }
+
+type CreatePaymentRequest struct {
+	From        int    `json:"from"`
+	To          int    `json:"to"`
+	Amount      int64  `json:"amount"`
+	Description string `json:"description"`
+}

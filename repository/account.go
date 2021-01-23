@@ -1,7 +1,7 @@
-package repo
+package repository
 
 import (
-	"cashapp/core/models"
+	"cashapp/models"
 
 	"gorm.io/gorm"
 )
