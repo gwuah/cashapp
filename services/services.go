@@ -8,13 +8,13 @@ import (
 )
 
 type Services struct {
-	Accounts *accountLayer
+	Users    *userLayer
 	Payments *paymentLayer
 }
 
 func NewService(r repository.Repo, kvStore *redis.Client, c *core.Config) Services {
 	return Services{
-		Accounts: newAccountLayer(r, c),
+		Users:    newUserLayer(r, c),
 		Payments: newPaymentLayer(r, c),
 	}
 }

@@ -8,10 +8,10 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func RegisterAccountsRoutes(e *gin.Engine, s services.Services) {
-	e.POST("/accounts", func(c *gin.Context) {
+func RegisterUserRoutes(e *gin.Engine, s services.Services) {
+	e.POST("/users", func(c *gin.Context) {
 
-		var req core.CreateAccountRequest
+		var req core.CreateUserRequest
 		if err := c.ShouldBindJSON(&req); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{
 				"message": err.Error(),
@@ -19,7 +19,7 @@ func RegisterAccountsRoutes(e *gin.Engine, s services.Services) {
 			return
 		}
 
-		response := s.Accounts.CreateAccount(req)
+		response := s.Users.CreateUser(req)
 
 		if response.Error {
 			c.JSON(response.Code, gin.H{

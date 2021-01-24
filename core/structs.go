@@ -19,7 +19,7 @@ type Response struct {
 	Meta  Meta `json:"meta"`
 }
 
-type CreateAccountRequest struct {
+type CreateUserRequest struct {
 	Tag string `json:"tag"`
 }
 

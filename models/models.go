@@ -11,6 +11,7 @@ import (
 type Type string
 type Status string
 type Direction string
+type Purpose string
 
 var (
 	Debit  Type = "debit"
@@ -22,6 +23,11 @@ var (
 
 	Incoming Direction = "incoming"
 	Outgoing Direction = "outgoing"
+
+	Transfer  Purpose = "transfer"
+	Deposit   Purpose = "deposit"
+	Withrawal Purpose = "withdrawal"
+	Reversal  Purpose = "reversal"
 )
 
 type Model struct {
@@ -31,7 +37,7 @@ type Model struct {
 	DeletedAt *time.Time `sql:"index" json:"deleted_at,omitempty"`
 }
 
-type Account struct {
+type User struct {
 	Model
 	Tag     string   `json:"tag"`
 	Wallets []Wallet `json:"wallets"`
@@ -39,9 +45,9 @@ type Account struct {
 
 type Wallet struct {
 	Model
-	AccountID int      `json:"account_id"`
-	Account   *Account `json:"account,omitempty"`
-	IsPrimary bool     `json:"is_primary,omitempty"`
+	UserID    int   `json:"user_id"`
+	User      *User `json:"user,omitempty"`
+	IsPrimary bool  `json:"is_primary,omitempty"`
 }
 
 type Transaction struct {
@@ -53,10 +59,9 @@ type Transaction struct {
 	From              int                `json:"from"`
 	To                int                `json:"to"`
 	WalletID          int                `json:"wallet_id"`
-	AccountID         int                `json:"account_id"`
-	Account           *Account           `json:"account,omitempty"`
-	TransactionEvents []TransactionEvent `json:"transaction_lines"`
 	Amount            int64              `json:"amount"`
+	Purpose           Purpose            `json:"purpose"`
+	TransactionEvents []TransactionEvent `json:"transaction_events"`
 }
 
 type TransactionEvent struct {
@@ -68,24 +73,24 @@ type TransactionEvent struct {
 }
 
 func RunSeeds(db *gorm.DB) {
-	account := Account{
+	user := User{
 		Tag: "yaw",
 	}
 
-	if err := db.Model(&Account{}).Where("tag=?", account.Tag).First(&account).Error; err != nil {
+	if err := db.Model(&User{}).Where("tag=?", user.Tag).First(&user).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			db.Create(&account)
+			db.Create(&user)
 		} else {
 			log.Println("err is nil", err)
 		}
 	}
 
 	wallet := Wallet{
-		AccountID: account.ID,
+		UserID:    user.ID,
 		IsPrimary: true,
 	}
 
-	if err := db.Model(&Wallet{}).Where("account_id=? AND is_primary=?", account.ID, true).First(&wallet).Error; err != nil {
+	if err := db.Model(&Wallet{}).Where("account_id=? AND is_primary=?", user.ID, true).First(&wallet).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			db.Create(&wallet)
 		} else {

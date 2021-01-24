@@ -21,7 +21,7 @@ func main() {
 		log.Fatal("failed to initialize postgres database. err:", err)
 	}
 
-	err = database.RunMigrations(pg, &models.Transaction{}, &models.Account{}, &models.Wallet{})
+	err = database.RunMigrations(pg, &models.Transaction{}, &models.User{}, &models.Wallet{})
 	if err != nil {
 		log.Fatal("failed to run migrations. err:", err)
 	}

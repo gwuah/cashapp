@@ -26,14 +26,15 @@ func newPaymentLayer(r repository.Repo, c *core.Config) *paymentLayer {
 }
 
 func (p *paymentLayer) SendMoney(req core.CreatePaymentRequest) core.Response {
-	// validate that both from and to accounts exist
 	fromTrans := models.Transaction{
 		From:        req.From,
 		To:          req.To,
+		Ref:         core.GenerateRef(),
 		Amount:      currency.ConvertCedisToPessewas(req.Amount),
 		Description: req.Description,
 		Direction:   models.Outgoing,
 		Status:      models.Pending,
+		Purpose:     models.Transfer,
 	}
 
 	if err := p.repository.Transactions.Create(&fromTrans); err != nil {
@@ -44,5 +45,13 @@ func (p *paymentLayer) SendMoney(req core.CreatePaymentRequest) core.Response {
 		return core.Error(err, nil)
 	}
 
+	return core.Success(nil, nil)
+}
+
+func (p *paymentLayer) WithdrawMoney(req core.CreatePaymentRequest) core.Response {
+	return core.Success(nil, nil)
+}
+
+func (p *paymentLayer) DepositMoney(req core.CreatePaymentRequest) core.Response {
 	return core.Success(nil, nil)
 }

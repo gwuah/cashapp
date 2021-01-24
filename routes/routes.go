@@ -22,6 +22,6 @@ func NewRouter(engine *gin.Engine, config *core.Config, services services.Servic
 }
 
 func (r *router) RegisterRoutes() {
-	RegisterAccountsRoutes(r.engine, r.services)
+	RegisterUserRoutes(r.engine, r.services)
 	RegisterPaymentRoutes(r.engine, r.services)
 }
