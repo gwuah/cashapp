@@ -16,7 +16,7 @@ func newWalletLayer(db *gorm.DB) *walletLayer {
 	}
 }
 
-func (wl *accountLayer) FindPrimaryWallet(accountID int) (*models.Wallet, error) {
+func (wl *walletLayer) FindPrimaryWallet(accountID int) (*models.Wallet, error) {
 	wallet := models.Wallet{
 		AccountID: accountID,
 		IsPrimary: true,

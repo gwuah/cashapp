@@ -61,10 +61,10 @@ type Transaction struct {
 
 type TransactionEvent struct {
 	Model
-	TransactionID string `json:"transaction_id"`
-	WalletID      string `json:"wallet_id"`
-	Type          Type   `json:"type"`
-	Amount        int64  `json:"amount"`
+	TransactionID int   `json:"transaction_id"`
+	WalletID      int   `json:"wallet_id"`
+	Type          Type  `json:"type"`
+	Amount        int64 `json:"amount"`
 }
 
 func RunSeeds(db *gorm.DB) {

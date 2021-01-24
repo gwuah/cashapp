@@ -4,8 +4,6 @@ import (
 	"cashapp/core"
 	"cashapp/repository"
 	"errors"
-	"log"
-	"net/http"
 
 	"gorm.io/gorm"
 )
@@ -26,48 +24,20 @@ func (c *accountLayer) CreateAccount(req core.CreateAccountRequest) core.Respons
 	account, err := c.repository.Accounts.FindByTag(req.Tag)
 
 	if err == nil {
-		return core.Response{
-			Error: true,
-			Code:  http.StatusBadRequest,
-			Meta: core.Meta{
-				Data:    nil,
-				Message: "cash tag has already been taken.",
-			},
-		}
+		return core.Error(err, core.String("cash tag has already been taken"))
 	}
 
 	if !errors.Is(err, gorm.ErrRecordNotFound) {
-		log.Println("findByTag failed. err", err)
-		return core.Response{
-			Error: true,
-			Code:  http.StatusInternalServerError,
-			Meta: core.Meta{
-				Data:    nil,
-				Message: "request failed",
-			},
-		}
+		return core.Error(err, nil)
 	}
 
 	if err := c.repository.Accounts.Create(account); err != nil {
-		log.Println("create account failed. err", err)
-		return core.Response{
-			Error: true,
-			Code:  http.StatusInternalServerError,
-			Meta: core.Meta{
-				Data:    nil,
-				Message: "request failed",
-			},
-		}
+		return core.Error(err, nil)
+
 	}
 
-	return core.Response{
-		Error: false,
-		Code:  http.StatusOK,
-		Meta: core.Meta{
-			Data: map[string]interface{}{
-				"account": account,
-			},
-			Message: "account created successfully",
-		},
-	}
+	return core.Success(&map[string]interface{}{
+		"account": account,
+	}, core.String("account created successfully"))
+
 }

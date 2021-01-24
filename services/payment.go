@@ -2,6 +2,8 @@ package services
 
 import (
 	"cashapp/core"
+	"cashapp/core/currency"
+
 	"cashapp/core/processor"
 
 	"cashapp/models"
@@ -28,7 +30,7 @@ func (p *paymentLayer) SendMoney(req core.CreatePaymentRequest) core.Response {
 	fromTrans := models.Transaction{
 		From:        req.From,
 		To:          req.To,
-		Amount:      core.ConvertCedisToPessewas(req.Amount),
+		Amount:      currency.ConvertCedisToPessewas(req.Amount),
 		Description: req.Description,
 		Direction:   models.Outgoing,
 		Status:      models.Pending,

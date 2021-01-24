@@ -1,8 +1,11 @@
 package processor
 
 import (
+	"cashapp/core/currency"
+
 	"cashapp/models"
 	"cashapp/repository"
+	"fmt"
 )
 
 type Processor struct {
@@ -15,18 +18,38 @@ func New(r repository.Repo) Processor {
 	}
 }
 
-func (p *Processor) ProcessTransaction(source models.Transaction) error {
-	// check balance of origin to see if they can afford the transaction
-	// call appropriate settlement formula to handle transaction
+func (p *Processor) ProcessTransaction(fromTrans models.Transaction) error {
 
-	// toTrans := models.Transaction{
-	// 	From:        req.From,
-	// 	To:          req.To,
-	// 	Amount:      core.ConvertCedisToPessewas(req.Amount),
-	// 	Description: req.Description,
-	// 	Direction:   models.Incoming,
-	// 	Status:      models.Pending,
-	// }
+	primaryWallet, err := p.Repo.Wallets.FindPrimaryWallet(fromTrans.From)
+	if err != nil {
+		return fmt.Errorf("failed to find primary balance. %v", err)
+	}
+
+	balance, err := p.Repo.TransactionEvents.GetWalletBalance(primaryWallet.ID)
+	if err != nil {
+		return fmt.Errorf("failed to load balance. %v", err)
+	}
+
+	if balance > fromTrans.Amount {
+		return fmt.Errorf("insufficient balance")
+	}
+
+	toTrans := models.Transaction{
+		From:        fromTrans.From,
+		To:          fromTrans.To,
+		Amount:      currency.ConvertCedisToPessewas(fromTrans.Amount),
+		Description: fromTrans.Description,
+		Direction:   models.Incoming,
+		Status:      models.Pending,
+	}
+
+	if err := p.Repo.Transactions.Create(&toTrans); err != nil {
+		return fmt.Errorf("failed to create destination transaction. %v", err)
+	}
+
+	if err := p.MoveMoneyBetweenWallets(fromTrans, toTrans); err != nil {
+		return fmt.Errorf("money movement failed. %v", err)
+	}
 
 	return nil
 }
