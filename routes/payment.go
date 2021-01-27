@@ -28,11 +28,4 @@ func RegisterPaymentRoutes(e *gin.Engine, s services.Services) {
 
 		c.JSON(response.Code, response.Meta)
 	})
-
-	e.POST("/payments/deposit", func(c *gin.Context) {
-	})
-
-	e.POST("/payments/withdraw", func(c *gin.Context) {
-	})
-
 }

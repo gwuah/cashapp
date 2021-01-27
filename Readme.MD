@@ -11,12 +11,15 @@ A working version of a simple peer-to-peer payment application.
 # Features
 
 - Ledger
-- Accounts
+- Users
 - Wallets
 - Transactions
 - Balance
 
 ## Notes
 
-No physical money is moved in this sysytem. if you want to move money, you need to integrate with a payment processor(expresspay, paystack, flutterwave)
-This is just a core part pre-built for you to re-use or learn from
+This is not production ready.
+This system works assumes the world is perfect.
+Also, no physical money is moved in this sytem. you'll need to integrate with a payment processor(expresspay, paystack, flutterwave)
+When I write add an integration with a payment processor, expect lots of things in this to change. As it stands, there's no architecture
+to retry transactions, no validations, etc etc
