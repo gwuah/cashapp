@@ -20,9 +20,18 @@ func (tl *transactionLayer) SQLTransaction(f func(tx *gorm.DB) error) error {
 	return tl.db.Transaction(f)
 }
 
-func (tl *transactionLayer) Create(data *models.Transaction) error {
-	if err := tl.db.Create(data).Error; err != nil {
+func (tl *transactionLayer) Create(tx *gorm.DB, data *models.Transaction) error {
+	if err := tx.Create(data).Error; err != nil {
 		return err
+	}
+	return nil
+}
+
+func (tl *transactionLayer) Updates(tx *gorm.DB, transactions ...*models.Transaction) error {
+	for _, trans := range transactions {
+		if err := tx.Updates(trans).Error; err != nil {
+			return err
+		}
 	}
 	return nil
 }

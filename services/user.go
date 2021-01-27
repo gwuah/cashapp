@@ -35,15 +35,12 @@ func (c *userLayer) CreateUser(req core.CreateUserRequest) core.Response {
 		return core.Error(err, nil)
 	}
 
-	// an automatic wallet is created for a every new user
 	wallet, err := c.repository.Wallets.Create(user.ID)
 	if err != nil {
 		return core.Error(err, nil)
-
 	}
 
 	user.Wallets = append(user.Wallets, *wallet)
-
 	return core.Success(&map[string]interface{}{
 		"user": user,
 	}, core.String("user created successfully"))

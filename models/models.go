@@ -52,6 +52,7 @@ type Wallet struct {
 
 type Transaction struct {
 	Model
+	FailureReason     string             `json:"failure_reason"`
 	Direction         Direction          `json:"direction"`
 	Status            Status             `json:"status"`
 	Description       string             `json:"description"`
