@@ -1,6 +1,7 @@
 # Cashapp
 
-A working version of a simple peer-to-peer payment application.
+A working version of a simple peer-to-peer payment application. This was my first iteration.
+Lots of things changed in the v2 to make it more reliable. But this is more than enough to demonstrate the concept. 😏
 
 # Setup
 
@@ -10,16 +11,17 @@ A working version of a simple peer-to-peer payment application.
 
 # Features
 
-- Ledger
 - Users
 - Wallets
 - Transactions
 - Balance
 
+# Inspiration
+
+- https://github.com/moov-io/accounts
+
 ## Notes
 
-This is not production ready.
-This system works assumes the world is perfect.
+This is the initial version I built. It's not production ready. This system works assumes the world is perfect. <br/>
 Also, no physical money is moved in this sytem. you'll need to integrate with a payment processor(expresspay, paystack, flutterwave)
-When I write add an integration with a payment processor, expect lots of things in this to change. As it stands, there's no architecture
-to retry transactions, no validations, etc etc
+The version 2 has alot of changes (retries, a queue, proper validations, notifications, ledger etc) but I don't think i'll release that.
