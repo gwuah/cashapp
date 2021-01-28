@@ -26,7 +26,7 @@ func (p *Processor) MoveMoneyBetweenWallets(fromTrans models.Transaction) (*mode
 		return nil, nil, fmt.Errorf("failed to load balance. %v", err)
 	}
 
-	if balance > fromTrans.Amount {
+	if balance < fromTrans.Amount {
 		return nil, nil, errors.New("insufficient balance")
 	}
 

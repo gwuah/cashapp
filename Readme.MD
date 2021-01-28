@@ -22,6 +22,6 @@ Lots of things changed in the v2 to make it more reliable. But this is more than
 
 ## Notes
 
-This is the initial version I built. It's not production ready. This system works assumes the world is perfect. <br/>
+This is the initial version I built. It's not production ready. This system assumes the world is perfect. <br/>
 Also, no physical money is moved in this sytem. you'll need to integrate with a payment processor(expresspay, paystack, flutterwave)
 The version 2 has alot of changes (retries, a queue, proper validations, notifications, ledger etc) but I don't think i'll release that.
